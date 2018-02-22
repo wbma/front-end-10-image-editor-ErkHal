@@ -14,6 +14,12 @@
     <canvas #myCanvas></canvas>
     <ion-list>
         <ion-item>
+          <ion-label>Auto Contrast</ion-label>
+          <ion-checkbox [(ngModel)]="editorProvider.autoContrastToggled"
+                        (ionChange)="editorProvider.applyFilters()">
+          </ion-checkbox>
+        </ion-item>
+        <ion-item>
             <ion-label>Brightness {{ editorProvider.brightness}}</ion-label>
             <ion-range [debounce]="500" min="-255" max="255" step="1" [(ngModel)]="editorProvider.brightness"
                        (ionChange)="editorProvider.applyFilters()">

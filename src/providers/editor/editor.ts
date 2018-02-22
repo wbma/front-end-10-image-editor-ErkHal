@@ -19,7 +19,7 @@ export class EditorProvider {
   numPixels: number;
   functions: any = {
     brightContrast: this.brightContrast,
-    colorFilter: this.colorFilter,
+    colorFilter: this.colorFilter
   };
 
   // editor variables
@@ -29,7 +29,9 @@ export class EditorProvider {
   red: string = '128';
   green: string = '128';
   blue: string = '128';
-  intensity: string = '50';
+  intensity: string = '0';
+
+  autoContrastToggled = false;
 
   constructor(public http: HttpClient, private file: File) {
     console.log('Hello EditorProvider Provider');
@@ -76,10 +78,18 @@ export class EditorProvider {
   applyFilters() {
     this.resetImage();
 
+    if(this.autoContrastToggled) {
+      this.autoContrast(this);
+    } else {
+      this.resetImage();
+    }
+
     for (let i in this.functions) {
+
       if (this.functions.hasOwnProperty(i)) {
         this.functions[i](this);
       }
+
     }
 
   }
@@ -87,6 +97,7 @@ export class EditorProvider {
   // filters
 
   brightContrast(thisClass) {
+    console.log('BrightContrast');
     console.log(thisClass);
     // console.log(thisClass.brightness);
     // console.log(thisClass.contrast);
@@ -107,9 +118,8 @@ export class EditorProvider {
   }
 
   colorFilter(thisClass) {
+    console.log('Colorfilter');
     console.log(thisClass);
-    // console.log(thisClass.brightness);
-    // console.log(thisClass.contrast);
     let red = parseInt(thisClass.red);
     let green = parseInt(thisClass.green);
     let blue = parseInt(thisClass.blue);
@@ -125,6 +135,62 @@ export class EditorProvider {
       thisClass.pixels[i * 4 + 2] =
        (thisClass.pixels[i * 4 + 2]) + blue * (strength / 100);
 
+    }
+
+    thisClass.context.clearRect(0, 0, thisClass.canvas.width, thisClass.canvas.height);
+    thisClass.context.putImageData(thisClass.imageData, 0, 0);
+
+  }
+
+  autoContrast(thisClass) {
+    console.log('autocontrast');
+    console.log(thisClass);
+
+    for (let i = 0; i < thisClass.numPixels; i++) {
+
+      //Get min and max of every color
+      const minRed = Math.min(thisClass.pixels[i * 4]);
+      const maxRed = Math.max(thisClass.pixels[i * 4]);
+
+      const minGreen = Math.min(thisClass.pixels[i * 4 + 1]);
+      const maxGreen = Math.max(thisClass.pixels[i * 4 + 1]);
+
+      const minBlue = Math.min(thisClass.pixels[i * 4 + 2]);
+      const maxBlue = Math.max(thisClass.pixels[i * 4 + 2]);
+
+      //Red
+      thisClass.pixels[i * 4] =
+       (thisClass.pixels[i * 4] - minRed)
+       / (maxRed - minRed)
+       * 255;
+       /*//Green
+       thisClass.pixels[i * 4 + 1] =
+        (thisClass.pixels[i * 4 + 1] - minGreen)
+        / (maxGreen - minGreen);
+        //* 255;
+       //Blue
+       thisClass.pixels[i * 4 + 2] =
+        (thisClass.pixels[i * 4 + 2] - minBlue)
+        / (maxBlue - minBlue);
+        //* 255;
+        */
+      /*
+      //Red
+      thisClass.pixels[i * 4] =
+       (thisClass.pixels[i * 4] - Math.min(thisClass.pixels[i * 4]))
+       / (Math.max(thisClass.pixels[i * 4]) - Math.min(thisClass.pixels[i * 4]))
+       * 255;
+       //Green
+       thisClass.pixels[i * 4 + 1] =
+        (thisClass.pixels[i * 4 + 1] - Math.min(thisClass.pixels[i * 4 + 1]))
+        / (Math.max(thisClass.pixels[i * 4 + 1]) - Math.min(thisClass.pixels[i * 4 + 1]))
+        * 255;
+       //Blue
+       thisClass.pixels[i * 4 + 2] =
+        (thisClass.pixels[i * 4 + 2] - Math.min(thisClass.pixels[i * 4 + 2]))
+        / (Math.max(thisClass.pixels[i * 4 + 2]) - Math.min(thisClass.pixels[i * 4 + 2]))
+        * 255;
+        */
     }
 
     thisClass.context.clearRect(0, 0, thisClass.canvas.width, thisClass.canvas.height);
