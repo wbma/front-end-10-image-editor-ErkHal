@@ -15,7 +15,13 @@
     <ion-list>
         <ion-item>
           <ion-label>Auto Contrast</ion-label>
-          <ion-checkbox [(ngModel)]="editorProvider.autoContrastToggled"
+          <ion-checkbox [(ngModel)]="editorProvider.autoContrastToggle"
+                        (ionChange)="editorProvider.applyFilters()">
+          </ion-checkbox>
+        </ion-item>
+        <ion-item>
+          <ion-label>Grayscale</ion-label>
+          <ion-checkbox [(ngModel)]="editorProvider.grayScaleToggle"
                         (ionChange)="editorProvider.applyFilters()">
           </ion-checkbox>
         </ion-item>
@@ -31,40 +37,40 @@
             <ion-label>Contrast {{ editorProvider.contrast}}</ion-label>
             <ion-range [debounce]="500" min="0" max="100" step="1" [(ngModel)]="editorProvider.contrast"
                        (ionChange)="editorProvider.applyFilters()">
-                <ion-icon small range-left name="sunny"></ion-icon>
-                <ion-icon range-right name="sunny"></ion-icon>
+                <ion-icon small range-left name="contrast"></ion-icon>
+                <ion-icon range-right name="contrast"></ion-icon>
             </ion-range>
         </ion-item>
         <ion-item>
             <ion-label>Red {{ editorProvider.red}}</ion-label>
             <ion-range [debounce]="500" min="0" max="255" step="1" [(ngModel)]="editorProvider.red"
                        (ionChange)="editorProvider.applyFilters()">
-                <ion-icon small range-left name="ion-paintbucket"></ion-icon>
-                <ion-icon range-right name="ion-paintbucket"></ion-icon>
+                <ion-icon class="red" small range-left name="color-palette"></ion-icon>
+                <ion-icon class="red" range-right name="color-palette"></ion-icon>
             </ion-range>
         </ion-item>
         <ion-item>
             <ion-label>Green {{ editorProvider.green}}</ion-label>
             <ion-range [debounce]="500" min="0" max="255" step="1" [(ngModel)]="editorProvider.green"
                        (ionChange)="editorProvider.applyFilters()">
-                <ion-icon small range-left name="ion-paintbucket"></ion-icon>
-                <ion-icon range-right name="ion-paintbucket"></ion-icon>
+                <ion-icon class="green" small range-left name="color-palette"></ion-icon>
+                <ion-icon class="green" range-right name="color-palette"></ion-icon>
             </ion-range>
         </ion-item>
         <ion-item>
             <ion-label>Blue {{ editorProvider.blue}}</ion-label>
             <ion-range [debounce]="500" min="0" max="255" step="1" [(ngModel)]="editorProvider.blue"
                        (ionChange)="editorProvider.applyFilters()">
-                <ion-icon small range-left name="ion-paintbucket"></ion-icon>
-                <ion-icon range-right name="ion-paintbucket"></ion-icon>
+                <ion-icon class="blue" small range-left name="color-palette"></ion-icon>
+                <ion-icon class="blue" range-right name="color-palette"></ion-icon>
             </ion-range>
         </ion-item>
         <ion-item>
             <ion-label>Intensity {{ editorProvider.intensity}}</ion-label>
             <ion-range [debounce]="500" min="0" max="100" step="1" [(ngModel)]="editorProvider.intensity"
                        (ionChange)="editorProvider.applyFilters()">
-                <ion-icon small range-left name="ion-paintbucket"></ion-icon>
-                <ion-icon range-right name="ion-paintbucket"></ion-icon>
+                <ion-icon small range-left name="color-wand"></ion-icon>
+                <ion-icon range-right name="color-wand"></ion-icon>
             </ion-range>
         </ion-item>
     </ion-list>

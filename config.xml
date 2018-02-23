@@ -84,24 +84,27 @@
             <string>Need to photo library access to get pictures from there</string>
         </config-file>
     </platform>
-    <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
-    <plugin name="cordova-plugin-device" spec="^2.0.1" />
-    <plugin name="cordova-plugin-splashscreen" spec="^5.0.2" />
-    <plugin name="cordova-plugin-ionic-webview" spec="^1.1.16" />
-    <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
+    <allow-navigation href="http://192.168.3.30:8100" />
+    <allow-navigation href="http://192.168.43.211:8100" />
+    <allow-navigation href="http://10.35.128.88:8100" />
     <plugin name="cordova-plugin-camera" spec="^4.0.2" />
     <plugin name="com-sarriaroman-photoviewer" spec="^1.1.15" />
     <plugin name="cordova-plugin-googlemaps" spec="^2.2.4">
         <variable name="API_KEY_FOR_ANDROID" value="AIzaSyDHY3SLJrzEYN-nWVsI5ix4dU1hrL5TJ3o" />
         <variable name="API_KEY_FOR_IOS" value="AIzaSyDHY3SLJrzEYN-nWVsI5ix4dU1hrL5TJ3o" />
+        <variable name="PLAY_SERVICES_VERSION" value="11.8.0" />
+        <variable name="ANDROID_SUPPORT_V4_VERSION" value="24.1.0" />
     </plugin>
+    <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
+    <plugin name="cordova-plugin-splashscreen" spec="^5.0.2" />
+    <plugin name="cordova-plugin-ionic-webview" spec="^1.1.16" />
+    <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
     <plugin name="cordova-plugin-geolocation" spec="^4.0.1">
         <variable name="GEOLOCATION_USAGE_DESCRIPTION" value="To locate you" />
     </plugin>
     <plugin name="cordova-plugin-file" spec="^6.0.1" />
-    <allow-navigation href="http://192.168.3.30:8100" />
+    <plugin name="cordova-plugin-device" spec="^2.0.1" />
+    <allow-navigation href="http://80.220.216.118:8100" />
     <engine name="ios" spec="~4.5.4" />
     <engine name="android" spec="7.0.0" />
-    <allow-navigation href="http://192.168.43.211:8100" />
-    <allow-navigation href="http://10.35.128.88:8100" />
 </widget>

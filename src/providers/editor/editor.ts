@@ -19,7 +19,9 @@ export class EditorProvider {
   numPixels: number;
   functions: any = {
     brightContrast: this.brightContrast,
-    colorFilter: this.colorFilter
+    colorFilter: this.colorFilter,
+    autoContrast: this.autoContrast,
+    grayScale: this.grayScale
   };
 
   // editor variables
@@ -31,7 +33,8 @@ export class EditorProvider {
   blue: string = '128';
   intensity: string = '0';
 
-  autoContrastToggled = false;
+  autoContrastToggle = false;
+  grayScaleToggle = false;
 
   constructor(public http: HttpClient, private file: File) {
     console.log('Hello EditorProvider Provider');
@@ -78,12 +81,6 @@ export class EditorProvider {
   applyFilters() {
     this.resetImage();
 
-    if(this.autoContrastToggled) {
-      this.autoContrast(this);
-    } else {
-      this.resetImage();
-    }
-
     for (let i in this.functions) {
 
       if (this.functions.hasOwnProperty(i)) {
@@ -99,8 +96,6 @@ export class EditorProvider {
   brightContrast(thisClass) {
     console.log('BrightContrast');
     console.log(thisClass);
-    // console.log(thisClass.brightness);
-    // console.log(thisClass.contrast);
     let contrast = parseFloat(thisClass.contrast)/10;
     let brightness = parseInt(thisClass.brightness);
     for (let i = 0; i < thisClass.numPixels; i++) {
@@ -143,60 +138,68 @@ export class EditorProvider {
   }
 
   autoContrast(thisClass) {
-    console.log('autocontrast');
-    console.log(thisClass);
+    if (thisClass.autoContrastToggle) {
+      let minRedContrast = 255;
+      let maxRedContrast = 0;
+      let minBlueContrast = 255;
+      let maxBlueContrast = 0;
+      let minGreenContrast = 255;
+      let maxGreenContrast = 0;
+      //set min max for each color channel
+      for (let i = 0; i < thisClass.numPixels; i++) {
+        if (thisClass.pixels[i * 4] < minRedContrast) {
+          minRedContrast = thisClass.pixels[i * 4]
+        }
+        if (thisClass.pixels[i * 4] > maxRedContrast) {
+          maxRedContrast = thisClass.pixels[i * 4]
+        }
+        if (thisClass.pixels[i * 4 + 1] < minGreenContrast) {
+          minGreenContrast = thisClass.pixels[i * 4 + 1]
+        }
+        if (thisClass.pixels[i * 4 + 1] > maxGreenContrast) {
+          maxGreenContrast = thisClass.pixels[i * 4 + 1]
+        }
+        if (thisClass.pixels[i * 4 + 2] < minBlueContrast) {
+          minBlueContrast = thisClass.pixels[i * 4 + 2]
+        }
+        if (thisClass.pixels[i * 4 + 2] > maxBlueContrast) {
+          maxBlueContrast = thisClass.pixels[i * 4 + 2]
+        }
+      }
+      //update with auto contrast for each channel
+      for (let j = 0; j < thisClass.numPixels; j++) {
+        thisClass.pixels[j * 4] = ((thisClass.pixels[j * 4] - minRedContrast) / (maxRedContrast - minRedContrast)) * 255;
+        thisClass.pixels[j * 4 + 1] = ((thisClass.pixels[j * 4 + 1] - minGreenContrast) / (maxGreenContrast - minGreenContrast)) * 255;
+        thisClass.pixels[j * 4 + 2] = ((thisClass.pixels[j * 4 + 2] - minBlueContrast) / (maxBlueContrast - minBlueContrast)) * 255;
+      }
 
-    for (let i = 0; i < thisClass.numPixels; i++) {
-
-      //Get min and max of every color
-      const minRed = Math.min(thisClass.pixels[i * 4]);
-      const maxRed = Math.max(thisClass.pixels[i * 4]);
-
-      const minGreen = Math.min(thisClass.pixels[i * 4 + 1]);
-      const maxGreen = Math.max(thisClass.pixels[i * 4 + 1]);
-
-      const minBlue = Math.min(thisClass.pixels[i * 4 + 2]);
-      const maxBlue = Math.max(thisClass.pixels[i * 4 + 2]);
-
-      //Red
-      thisClass.pixels[i * 4] =
-       (thisClass.pixels[i * 4] - minRed)
-       / (maxRed - minRed)
-       * 255;
-       /*//Green
-       thisClass.pixels[i * 4 + 1] =
-        (thisClass.pixels[i * 4 + 1] - minGreen)
-        / (maxGreen - minGreen);
-        //* 255;
-       //Blue
-       thisClass.pixels[i * 4 + 2] =
-        (thisClass.pixels[i * 4 + 2] - minBlue)
-        / (maxBlue - minBlue);
-        //* 255;
-        */
-      /*
-      //Red
-      thisClass.pixels[i * 4] =
-       (thisClass.pixels[i * 4] - Math.min(thisClass.pixels[i * 4]))
-       / (Math.max(thisClass.pixels[i * 4]) - Math.min(thisClass.pixels[i * 4]))
-       * 255;
-       //Green
-       thisClass.pixels[i * 4 + 1] =
-        (thisClass.pixels[i * 4 + 1] - Math.min(thisClass.pixels[i * 4 + 1]))
-        / (Math.max(thisClass.pixels[i * 4 + 1]) - Math.min(thisClass.pixels[i * 4 + 1]))
-        * 255;
-       //Blue
-       thisClass.pixels[i * 4 + 2] =
-        (thisClass.pixels[i * 4 + 2] - Math.min(thisClass.pixels[i * 4 + 2]))
-        / (Math.max(thisClass.pixels[i * 4 + 2]) - Math.min(thisClass.pixels[i * 4 + 2]))
-        * 255;
-        */
+      thisClass.context.clearRect(0, 0, thisClass.canvas.width, thisClass.canvas.height);
+      thisClass.context.putImageData(thisClass.imageData, 0, 0);
     }
-
-    thisClass.context.clearRect(0, 0, thisClass.canvas.width, thisClass.canvas.height);
-    thisClass.context.putImageData(thisClass.imageData, 0, 0);
-
   }
+
+  grayScale(thisClass) {
+    if (thisClass.grayScaleToggle) {
+
+      for (let i = 0; i < thisClass.numPixels; i++) {
+
+        let coefficience = thisClass.pixels[i * 4] * 0.2126
+                          + thisClass.pixels[i * 4 + 1] * 0.7152
+                          + thisClass.pixels[i * 4 + 2] *  0.0722;
+
+        //Red
+        thisClass.pixels[i * 4] = coefficience;
+        //Green
+        thisClass.pixels[i * 4 + 1] = coefficience;
+        //Blue
+        thisClass.pixels[i * 4 + 2] = coefficience;
+      }
+
+      thisClass.context.clearRect(0, 0, thisClass.canvas.width, thisClass.canvas.height);
+      thisClass.context.putImageData(thisClass.imageData, 0, 0);
+    }
+  }
+
 
   getExif(img) {
     let latLon: any;

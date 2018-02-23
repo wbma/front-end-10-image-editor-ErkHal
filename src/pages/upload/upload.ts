@@ -1,7 +1,6 @@
 import {Component, ElementRef, Renderer2, ViewChild} from '@angular/core';
 import {
   LoadingController, NavController, NavParams,
-  Platform,
 } from 'ionic-angular';
 import {MediaProvider} from '../../providers/media/media';
 import {FrontPage} from '../front/front';
@@ -9,7 +8,6 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {Camera, CameraOptions} from '@ionic-native/camera';
 import {Geolocation} from '@ionic-native/geolocation';
 import {DomSanitizer} from '@angular/platform-browser';
-import {File, /*FileEntry*/ } from '@ionic-native/file';
 import {EditorProvider} from '../../providers/editor/editor';
 
 /**
